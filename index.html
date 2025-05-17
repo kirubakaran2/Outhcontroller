@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OAuth Redirect Capture PoC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+    h1 {
+      color: #333;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>OAuth Redirect Capture PoC</h1>
+  <p>This page captures OAuth URL parameters and displays them below.</p>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    function getQueryParams() {
+      const params = {};
+      const queryString = window.location.search.substring(1);
+      const pairs = queryString.split("&");
+      for (const pair of pairs) {
+        if (!pair) continue;
+        const [key, value] = pair.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+      }
+      return params;
+    }
+
+    function prettyPrint(obj) {
+      return JSON.stringify(obj, null, 2);
+    }
+
+    window.onload = () => {
+      const params = getQueryParams();
+      const output = document.getElementById("output");
+      if (Object.keys(params).length === 0) {
+        output.textContent = "No query parameters found.";
+      } else {
+        output.textContent = prettyPrint(params);
+      }
+    };
+  </script>
+</body>
+</html>
