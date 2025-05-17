@@ -21,6 +21,8 @@
       padding: 15px;
       border-radius: 4px;
       overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
   </style>
 </head>
@@ -37,7 +39,11 @@
       for (const pair of pairs) {
         if (!pair) continue;
         const [key, value] = pair.split("=");
-        params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+        try {
+          params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+        } catch (e) {
+          params[key] = value || "";
+        }
       }
       return params;
     }
@@ -49,11 +55,9 @@
     window.onload = () => {
       const params = getQueryParams();
       const output = document.getElementById("output");
-      if (Object.keys(params).length === 0) {
-        output.textContent = "No query parameters found.";
-      } else {
-        output.textContent = prettyPrint(params);
-      }
+      output.textContent = Object.keys(params).length
+        ? prettyPrint(params)
+        : "No query parameters found.";
     };
   </script>
 </body>
